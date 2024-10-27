@@ -1,23 +1,29 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import Drawing from "./components/Drawing";
 
 function App() {
+  // const draw = "circles";
+  const [draw, setDraw] = useState("circles");
+  const how = "D3";
+
+  const changeDraw = () => {
+    if (draw == "circles") setDraw("rects");
+    else                   setDraw("circles");
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <div style={{display: "flex"}}>
+        {["Drawing", draw].join(" ")}
+        <button style={{marginLeft: 5}} onClick={changeDraw}>
+          {draw === "circles" ? "rects" : "circles"}
+        </button>
+      </div>
+      <Drawing
+        draw={draw}
+        how={how}
+      />
     </div>
   );
 }
