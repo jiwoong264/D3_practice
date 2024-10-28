@@ -10,7 +10,7 @@ function App() {
     let height = 500;
     let margin = 20;
 
-    useEffect(() => {
+    useEffect(() => {    
         movie.forEach(d => {
             d.us_gross = parseFloat(d.us_gross);
             d.rotten_rating = parseFloat(d.rotten_rating);
@@ -56,6 +56,33 @@ function App() {
             .attr('cx', d => xScale(d.rotten_rating))
             .attr('cy', d => yScale(d.us_gross))
             .attr('fill', d => colorScale(d.rating))
+        
+
+        const brush = d3.brush()
+        .extent([[0,0], [width, height]])
+        .on("start brush end", brushed);
+
+
+        svg.append('g')
+        .attr('transform', `translate(${margin}, ${margin})`)
+        .call(brush)
+
+        const circle = svg.selectAll('circle');
+
+        function brushed({selection}) {
+            if (selection == null) {
+            circle.classed("selected", false);
+            }
+            else {
+                let [[x0, y0], [x1, y1]] = selection;
+                circle.classed("selected", d => {
+                    let xCoord = xScale(d.rotten_rating);
+                    let yCoord = yScale(d.us_gross);
+                    return x0 <= xCoord && xCoord <= x1
+                        && y0 <= yCoord && yCoord <= y1                    
+                });
+            }
+        }
     });
 
     return (
